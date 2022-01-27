@@ -18,5 +18,5 @@
 
 
 #####2.2 User Requirements
-An interactive GUI that displays the live state of each system components and allows the user to interact with each system components
+*An interactive GUI that displays the live state of each system components and allows the user to interact with each system components*
 
