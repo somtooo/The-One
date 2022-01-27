@@ -17,6 +17,6 @@
 5. Outdoor Camera. Sends Live video or picture depicting the state of its surroundings.
 
 
-#####2.2 User Requirements
+##### 2.2 User Requirements
 *An interactive GUI that displays the live state of each system components and allows the user to interact with each system components*
 
