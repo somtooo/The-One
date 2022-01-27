@@ -4,7 +4,7 @@
 *To simulate a home automation system using threads and events patterns.*
 
 ### 2. System Requirements
-1. Monitoring (e.g What is the temp, is door locked, are lights on.)
+1. Monitoring (e.g What is the temp, is the door locked, are lights on.)
 2. Control (e.g Turn up the heating, Lock the Door, Turn Light on or off.)
 3. Automation (e.g Turn on the heating if the outside temperature falls below a certain temperature.)
 
