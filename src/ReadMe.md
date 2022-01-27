@@ -1,4 +1,4 @@
-<H1>The One - A Home Automation Simulation</H1>
+<H1>The One - A Home Automation System Simulation</H1>
 
 ### 1. Goal
 *To simulate a home automation system using threads and events patterns.*
