@@ -20,3 +20,23 @@
 ##### 2.2 User Requirements
 *An interactive GUI that displays the live state of each system components and allows the user to interact with each system components*
 
+### 3.0 Interaction Between System Processes 
+
+##### 3.1 User Interaction
+User interacts with the system through the cmd using keyboard commands. It maniplates components by talking to the system server or the components directly(virtual & physical interface). Check out the java client library that can also be simulated to speak to the server - https://googleapis.dev/java/google-api-services-smartdevicemanagement/latest/. 
+User/testers also have a backdoor into the system thats used to help simulate failures. e.g the user can cause the light bulb to burn out or the motherboard in the ac to fry. Ideally we want the user to enter a coomand through the keyboard, this will then put the simulation in an unsafe state and cause different failures randomly. The goal is to see how the server handles such failures. (gracefully or catastrophically).
+
+
+##### 3.1 Server Interaction
+The server is the cto of the system. It handles dynamic configuration, automation and keeping the user up to date on state of curent components.
+<p><u> Server and User </u></p>
+The server executes commands from the user and also keeps the user up to date on the current state of each component.
+<p> Server and Components </p>
+1. The server is able to communicate with each component connected to it through its interface. It's also gives the user the capabilities to connect a new component to it and configure old components.
+2. The server handles automation requirements. At a high level it can be explained using this example. if(nobodyHome) {targetTemp = 74, turn of all lights}. This entails some type of cordination between the sensor component, thermostat and light components.
+
+##### 3.2 Components
+Components are separate entites and for now do not know about each other. After some research an idea is to simulate google nest components since an api has been defined. Heres an example of the nest thermostat api. https://developers.google.com/nest/device-access/api/thermostat. All or some functionality per the java client library. 
+To view the view API guide for devices go here - https://developers.google.com/nest/device-access/api.
+
+
