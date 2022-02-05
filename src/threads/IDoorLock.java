@@ -1,5 +1,8 @@
 package threads;
 
+/**
+ * Represents an iot door lock that has a camera and a doorbell.
+ */
 public interface IDoorLock extends ICamera{
 
   /**

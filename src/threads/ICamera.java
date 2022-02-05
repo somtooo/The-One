@@ -1,5 +1,8 @@
 package threads;
 
+/**
+ * Represents an iot camera
+ */
 public interface ICamera {
 
   /**
@@ -15,6 +18,11 @@ public interface ICamera {
    * @return the url to watch the camera's live stream.
    */
   String generateStream();
+
+  /**
+   * Stops stream.
+   */
+  void stopStream();
 
   /**
    * Checks device connectivity in case of errors.

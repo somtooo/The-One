@@ -1,5 +1,8 @@
 package threads;
 
+/*
+Represents an iot light.
+ */
 public interface ILight {
   /**
    * Turns light on.

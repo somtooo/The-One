@@ -11,7 +11,7 @@ public interface IThermostat {
    * @param mode the specified behaviour. It ranges from Heat,Cool and OFF
    //@return true if behaviour was changed or false if there was an error.
    */
-  void setMode(Mode mode);
+  void setMode(Mode mode) throws InterruptedException;
 
   /**
    * Changes the temperature setPoint must be in HEAT mode to work. Note this is
@@ -28,11 +28,6 @@ public interface IThermostat {
    */
   void setCool(double degrees);
 
-  /**
-   * Sets the target temperature defaults to 25deg on device setup
-   * @param degrees the degree in Celsius to set the cool mode temp to.
-   */
-  void targetTemperature(double degrees);
 
   /**
    * Runs the thermostat fan for the specified duration. Note that command
