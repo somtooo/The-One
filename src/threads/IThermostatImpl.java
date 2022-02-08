@@ -21,21 +21,33 @@ public class IThermostatImpl implements IThermostat {
     this.roomTemp = 0.0;
     setRoomTemp();
 
+
+    Thread t1 = new Thread(new Runnable() {
+      @Override
+      public void run() {
+        try {
+          runHvacSystem();
+        } catch (InterruptedException e) {
+          e.printStackTrace();
+        }
+      }
+    });
+    t1.start();
+
   }
 
   @Override
-  public void setMode(Mode mode) throws InterruptedException {
+  public void setMode(Mode mode) {
     this.mode = mode;
     if (mode != Mode.OFF) {
       System.out.printf("Thermostat on and setTo mode %s \n", mode);
       this.preferredTemp = (this.mode == Mode.COOL ? 20.00 :  29.60  );
-
-      runHvacSystem();
       notifyClient(Events.RESOURCE);
 
     } else {
       System.out.println("Thermostat off");
     }
+
 
   }
 
@@ -46,12 +58,13 @@ public class IThermostatImpl implements IThermostat {
 
   private void runHvacSystem() throws InterruptedException {
     while (this.mode != Mode.OFF) {
+      Thread.sleep(3000);
       if (roomTemp > preferredTemp) {
-        roomTemp -= 0.08;
+        roomTemp -= 0.01;
       } else if (roomTemp == preferredTemp) {
         turnFan(500);
       } else {
-        roomTemp += 0.08;
+        roomTemp += 0.01;
       }
     }
   }

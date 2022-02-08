@@ -1,5 +1,7 @@
 package threads;
 
+import java.util.List;
+
 /**
  * Represents an iot camera
  */
@@ -17,7 +19,7 @@ public interface ICamera {
    * Generates a live stream from the camera. Stream is only active for 5 min.
    * @return the url to watch the camera's live stream.
    */
-  String generateStream();
+  List<Integer> generateStream();
 
   /**
    * Stops stream.
