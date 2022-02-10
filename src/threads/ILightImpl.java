@@ -13,6 +13,7 @@ public class ILightImpl implements ILight {
     this.isLightOn = false;
     this.isConnected = true;
   }
+
   @Override
   public void turnLightOn() {
     isLightOn = true;

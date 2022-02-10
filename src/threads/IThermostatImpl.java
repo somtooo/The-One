@@ -2,7 +2,7 @@ package threads;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class IThermostatImpl implements IThermostat {
 
@@ -11,6 +11,9 @@ public class IThermostatImpl implements IThermostat {
   private boolean fanOn;
   private List<DeviceClient> clients;
   private double roomTemp;
+  ReentrantLock lock = new ReentrantLock();
+
+
 
 
   public IThermostatImpl() {
@@ -37,16 +40,22 @@ public class IThermostatImpl implements IThermostat {
   }
 
   @Override
-  public void setMode(Mode mode) {
-    this.mode = mode;
-    if (mode != Mode.OFF) {
-      System.out.printf("Thermostat on and setTo mode %s \n", mode);
-      this.preferredTemp = (this.mode == Mode.COOL ? 20.00 :  29.60  );
-      notifyClient(Events.RESOURCE);
+  synchronized public void setMode(Mode mode) {
+    lock.lock();
+    try{
+      this.mode = mode;
+      if (mode != Mode.OFF) {
+        System.out.printf("Thermostat on and setTo mode %s \n", mode);
+        this.preferredTemp = (this.mode == Mode.COOL ? 20.00 :  29.60  );
+        notifyClient(Events.RESOURCE);
 
-    } else {
-      System.out.println("Thermostat off");
+      } else {
+        System.out.println("Thermostat off");
+      }
+    } finally{
+      lock.unlock();
     }
+
 
 
   }
@@ -57,8 +66,10 @@ public class IThermostatImpl implements IThermostat {
 
 
   private void runHvacSystem() throws InterruptedException {
+
     while (this.mode != Mode.OFF) {
       Thread.sleep(3000);
+      lock.lock();
       if (roomTemp > preferredTemp) {
         roomTemp -= 0.01;
       } else if (roomTemp == preferredTemp) {
@@ -66,13 +77,16 @@ public class IThermostatImpl implements IThermostat {
       } else {
         roomTemp += 0.01;
       }
+      lock.unlock();
     }
   }
 
   @Override
   public void setHeat(double degrees) {
     if (this.mode == Mode.HEAT) {
+      lock.lock();
       this.preferredTemp = degrees;
+      lock.unlock();
     }
 
     notifyClient(Events.RESOURCE);
@@ -82,14 +96,16 @@ public class IThermostatImpl implements IThermostat {
   @Override
   public void setCool(double degrees) {
     if (this.mode == Mode.COOL) {
+      lock.lock();
       this.preferredTemp = degrees;
+      lock.unlock();
     }
     notifyClient(Events.RESOURCE);
   }
 
 
   @Override
-  public void turnFan(int duration) {
+  synchronized public void turnFan(int duration) {
     fanOn = true;
     notifyClient(Events.RESOURCE);
     while (duration-- > 0) {
@@ -104,7 +120,7 @@ public class IThermostatImpl implements IThermostat {
   }
 
   @Override
-  public boolean isConnected() {
+  synchronized public boolean isConnected() {
     return mode != Mode.OFF;
   }
 

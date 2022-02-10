@@ -7,7 +7,6 @@ public class IDoorLockImpl  extends ICameraImpl implements IDoorLock {
   private boolean isLocked;
   private List<DeviceClient> clients;
 
-
   public IDoorLockImpl() throws InterruptedException {
     super();
     this.isLocked = false;
@@ -30,7 +29,6 @@ public class IDoorLockImpl  extends ICameraImpl implements IDoorLock {
   @Override
   public void subscribe(DeviceClient client) {
   clients.add(client);
-
   }
 
   private void notifyClient(Events resource) {
