@@ -13,10 +13,16 @@ public class ICameraImpl implements ICamera {
   private int i = 0;
   private  int streamTime = 15;
   private boolean stop;
+  private String name;
+  private boolean personTracking;
+  private final int TRACKING_FACTOR;
   ReentrantLock lock = new ReentrantLock();
 
 
-  public ICameraImpl() throws InterruptedException {
+  public ICameraImpl(String name, int tracking_factor) throws InterruptedException {
+    this.name = name;
+    TRACKING_FACTOR = tracking_factor;
+    this.personTracking = false;
     this.clients = new ArrayList<>();
     copyStream = new ArrayList<>();
     connected = true;
@@ -35,13 +41,14 @@ public class ICameraImpl implements ICamera {
 
   private void runCamera() throws InterruptedException {
     while (connected) {
-      Thread.sleep(3000);
-      if (i%10 ==0) {
-        notifyClient();
-      }
+      Thread.sleep(6000);
       lock.lock();
       try {
         // Critical section here
+        if(personTracking && i%TRACKING_FACTOR==0) {
+          notifyClient(new Message(Events.PERSON, name + " Camera person detected", String.valueOf(i)));
+
+        }
         if (!stop) {
           copyStream.add(i);
         }
@@ -65,7 +72,7 @@ public class ICameraImpl implements ICamera {
   public String generateImage(String eventId) {
     for (Integer urlInt : imageStream) {
       if (urlInt == Integer.parseInt(eventId)) {
-        return String.valueOf(urlInt);
+        return urlInt + " this is the image!!";
       }
 
     }
@@ -100,6 +107,11 @@ public class ICameraImpl implements ICamera {
   }
 
   @Override
+  public void setPersonTracking(boolean shouldTrack) {
+    personTracking = shouldTrack;
+  }
+
+  @Override
   public boolean isConnected() {
     return connected;
   }
@@ -109,9 +121,9 @@ public class ICameraImpl implements ICamera {
     clients.add(client);
   }
 
-  private void notifyClient() {
+  private void notifyClient(Message message) {
     for (DeviceClient client : clients ) {
-      client.receiveEvents(Events.PERSON);
+      client.receiveEvents(message);
     }
   }
 }

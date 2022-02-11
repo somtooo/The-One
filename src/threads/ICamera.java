@@ -32,6 +32,11 @@ public interface ICamera {
    */
   boolean isConnected();
 
+  /*
+    Activates the tracking functionality of the app.
+   */
+  public void setPersonTracking(boolean shouldTrack);
+
 
   /**
    * This device is able to detect persons. Client must be subscribed to receive Person events.

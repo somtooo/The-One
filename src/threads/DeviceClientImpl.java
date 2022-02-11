@@ -7,22 +7,35 @@ public class DeviceClientImpl implements DeviceClient {
   private IDoorLock doorLock;
   private  ILight light;
   private ICamera camera;
+  private Driver client;
+  private String personEventId;
 
-  public DeviceClientImpl() throws InterruptedException {
-    this.thermostat = new IThermostatImpl();
+  public DeviceClientImpl(IThermostat thermostat, IDoorLock doorLock, ILight light, ICamera camera, Driver client) {
+    this.thermostat = thermostat;
     thermostat.subscribe(this);
-    this.doorLock = new IDoorLockImpl();
+    this.doorLock = doorLock;
     doorLock.subscribe(this);
-    this.light = new ILightImpl();
+    this.light = light;
     light.subscribe(this);
-    this.camera = new ICameraImpl();
+    this.camera = camera;
     camera.subscribe(this);
+    this.client = client;
+    this.personEventId = "";
   }
 
 
+
+
   @Override
-  public void receiveEvents(Events event) {
-    System.out.printf("Received event of type %s \n", event);
+  public void receiveEvents(Message message) {
+    client.notify(message.message);
+    if (message.event == Events.PERSON) {
+      personEventId = message.id;
+      if (!message.message.contains("Door")) {
+        turnLightOn();
+      }
+    }
+
   }
 
   @Override
@@ -48,13 +61,14 @@ public class DeviceClientImpl implements DeviceClient {
   }
 
   @Override
-  public String generateImage(String eventID) {
-    return camera.generateImage(eventID);
+  public void generateImage() {
+    client.notify(camera.generateImage(personEventId));
+
   }
 
   @Override
-  public List<Integer> generateStream() {
-    return camera.generateStream();
+  public void generateStream() throws InterruptedException {
+    client.notify(camera.generateStream());
   }
 
   @Override

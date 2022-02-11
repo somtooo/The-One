@@ -8,7 +8,7 @@ import java.util.List;
  * Client that handles all interactions and automation between iot devices and the user.
  */
 public interface DeviceClient {
-  public void receiveEvents(Events event);
+  public void receiveEvents(Message message);
 
   /**
    * Locks the door.
@@ -36,13 +36,13 @@ public interface DeviceClient {
    * showing current state of camera surroundings.
    * @return url to download image from
    */
-  String generateImage(String eventId);
+  void generateImage();
 
   /**
    * Generates a live stream from the camera. Stream is only active for 5 min.
    * @return the url to watch the camera's live stream.
    */
-  List<Integer> generateStream();
+  void generateStream() throws InterruptedException;
 
   /**
    * Stops stream.

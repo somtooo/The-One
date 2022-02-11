@@ -17,13 +17,13 @@ public class ILightImpl implements ILight {
   @Override
   public void turnLightOn() {
     isLightOn = true;
-    notifyClient(Events.RESOURCE);
+    notifyClient(new Message(Events.RESOURCE, "Light is On"));
   }
 
   @Override
   public void turnLightOff() {
     isLightOn = false;
-    notifyClient(Events.RESOURCE);
+    notifyClient(new Message(Events.RESOURCE, "Light is On"));
   }
 
   @Override
@@ -36,9 +36,9 @@ public class ILightImpl implements ILight {
     clients.add(client);
   }
 
-  private void notifyClient(Events resource) {
+  private void notifyClient(Message message) {
     for (DeviceClient client : clients ) {
-      client.receiveEvents(resource);
+      client.receiveEvents(message);
     }
   }
 }

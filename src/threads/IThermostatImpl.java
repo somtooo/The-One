@@ -45,12 +45,11 @@ public class IThermostatImpl implements IThermostat {
     try{
       this.mode = mode;
       if (mode != Mode.OFF) {
-        System.out.printf("Thermostat on and setTo mode %s \n", mode);
         this.preferredTemp = (this.mode == Mode.COOL ? 20.00 :  29.60  );
-        notifyClient(Events.RESOURCE);
+        notifyClient(new Message(Events.RESOURCE, "Thermostat on and setTo: " + mode));
 
       } else {
-        System.out.println("Thermostat off");
+        notifyClient(new Message(Events.RESOURCE, "Thermostat turned off"));
       }
     } finally{
       lock.unlock();
@@ -89,7 +88,7 @@ public class IThermostatImpl implements IThermostat {
       lock.unlock();
     }
 
-    notifyClient(Events.RESOURCE);
+    notifyClient(new Message(Events.RESOURCE, "Heat temp changed"));
 
   }
 
@@ -100,14 +99,14 @@ public class IThermostatImpl implements IThermostat {
       this.preferredTemp = degrees;
       lock.unlock();
     }
-    notifyClient(Events.RESOURCE);
+    notifyClient(new Message(Events.RESOURCE, "Cool temp changed"));
   }
 
 
   @Override
   synchronized public void turnFan(int duration) {
     fanOn = true;
-    notifyClient(Events.RESOURCE);
+    notifyClient(new Message(Events.RESOURCE, "Fan turned On"));
     while (duration-- > 0) {
       if (mode == Mode.COOL) {
         roomTemp+=0.5;
@@ -129,9 +128,9 @@ public class IThermostatImpl implements IThermostat {
     clients.add(client);
   }
 
-  private void notifyClient(Events resource) {
+  private void notifyClient(Message message) {
     for (DeviceClient client : clients ) {
-      client.receiveEvents(resource);
+      client.receiveEvents(message);
     }
   }
 }
